@@ -36,7 +36,7 @@ print("APIからデータを取得しました。ファイルを取得してい�
 response = json.loads(data.decode("utf-8"))
 
 if not response["success"]:
-    print("API制限なので24時間後に再度お試しください")
+    print("API制限なので24時間後に再度お試しください。50/日らしいです。")
     exit()
 
 cover = response["data"]["cover"]
