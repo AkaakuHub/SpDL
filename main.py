@@ -60,11 +60,11 @@ def main():
         exit()
         
     if "del" in songID:
-        # zipを削除
-        for root, dirs, files in os.walk(".", topdown=False):
-            if any(file.endswith(".zip") for file in files):
-                shutil.rmtree(root)
-                print(f"{root}を削除しました")
+        # zipで終わるファイルのみを削除
+        for file in os.listdir():
+            if file.endswith(".zip"):
+                os.remove(file)
+                print(f"{file}を削除しました")
         exit()
 
     if "https" in songID:
