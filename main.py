@@ -3,8 +3,11 @@ import json
 import requests
 import os
 import shutil
+from dotenv import load_dotenv
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC, TIT2, TPE1, TALB
+
+load_dotenv()
 
 # 環境変数を読み込む
 APIKEY = os.getenv("APIKEY")
@@ -32,7 +35,7 @@ def main():
     }
 
     # 入力で求める
-    songID = input("URLまたはIDを入力してください / 最後に「zip」で圧縮: ")
+    songID = input("URLまたはIDを入力してください / 最後に「zip」で圧縮 / 「del」でzipを削除: ")
 
     # もしこの入力が"zip"だったら、main.pyを除く全てのディレクトリをzipに圧縮して、元のファイルを消す
     if songID == "zip":
@@ -40,7 +43,7 @@ def main():
         # exit()
 
         os.system(
-            "zip -r $(date +'%Y-%m-%d-%H-%M-%S').zip * -x *.py s *.zip *.nix *.toml *.lock .replit .pythonlibs .cache __pycache__"
+            "zip -r $(date +'%Y-%m-%d-%H-%M-%S').zip * -x *.py s *.zip *.nix *.toml *.lock .replit .pythonlibs .cache __pycache__ .gitignore"
         )
         # 一番下にmp3が入っている階層を対象に、すべてのファイルと階層ごと削除
         # mp3が入っていないディレクトリは削除されない
@@ -49,13 +52,25 @@ def main():
             if any(file.endswith(".mp3") for file in files):
                 # mp3ファイルが見つかった場合、そのディレクトリと中身をすべて削除
                 shutil.rmtree(root)
+                print(f"{root}を削除しました")
             elif not os.listdir(root):
                 # ディレクトリが空の場合、そのディレクトリを削除
                 os.rmdir(root)
+                print(f"{root}を削除しました")
+        exit()
+        
+    if "del" in songID:
+        # zipを削除
+        for root, dirs, files in os.walk(".", topdown=False):
+            if any(file.endswith(".zip") for file in files):
+                shutil.rmtree(root)
+                print(f"{root}を削除しました")
         exit()
 
     if "https" in songID:
         songID = songID.split("/")[-1].split("?")[0]
+    
+    print("APIからデータを取得しています...")
 
     conn.request("GET", f"/downloadSong?songId={songID}", headers=headers)
 
