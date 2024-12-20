@@ -77,14 +77,16 @@ def main():
     res = conn.getresponse()
     data = res.read()
 
-    print("APIからデータを取得しました。ファイルを取得しています...")
+    print("APIからデータを取得しました。")
 
     response = json.loads(data.decode("utf-8"))
 
     if not response["success"]:
-        print("API制限なので24時間後に再度お試しください")
+        print("失敗。API制限なので24時間後に再度お試しください")
         print(data.decode("utf-8"))
         exit()
+        
+    print("成功。ファイルを取得しています...")
 
     cover = response["data"]["cover"]
     downloadLink = response["data"]["downloadLink"]
