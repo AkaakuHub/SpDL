@@ -18,9 +18,11 @@ def replace_ng_letter(text: str) -> str:
 def main():
     print("メタデータを手動で書き込みます。")
 
-    title = ""
-    artist = ""
-    album = ""
+
+    # ユーザーの入力
+    title = input("曲名: ")
+    artist = input("アーティスト: ")
+    album = input("アルバム: ")
 
     title = replace_ng_letter(title)
     artist = replace_ng_letter(artist)
@@ -39,6 +41,19 @@ album: {album}
     print("メタデータの更新を行っています...")
 
     # メタデータの上書き
+    mp3_file_path = "temp.mp3"
+    
+    try:
+        tags = ID3(mp3_file_path)
+    except Exception:
+        print("ID3タグがないため、新規作成します")
+        audio = MP3(mp3_file_path, ID3=ID3)
+        audio.add_tags()
+        audio.save()
+        tags = ID3(mp3_file_path)
+        
+    print("current tags:", tags)
+    
     audio = MP3("temp.mp3", ID3=ID3)
 
     audio.tags.add(

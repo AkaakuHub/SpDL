@@ -1,2 +1,7 @@
-*.env*
-*.zip
+*
+
+!main.py
+!fixer.py
+!.gitignore
+!s
+!.sample.env
